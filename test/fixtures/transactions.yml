@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 9.99
+  date: 2021-01-25 15:36:18
+  category: one
+  area: one
+  account: one
+  destination_account_id: 1
+  destination_amount: 9.99
+
+two:
+  amount: 9.99
+  date: 2021-01-25 15:36:18
+  category: two
+  area: two
+  account: two
+  destination_account_id: 1
+  destination_amount: 9.99
