@@ -5,8 +5,11 @@ class CreateCurrencyRatesJoinTable < ActiveRecord::Migration[6.1]
       t.integer :to_id, null: false, foreign_key: true
       t.string :source
       t.decimal :rate, null: false, precision: 14, scale: 4
+
+      t.timestamps
     end
 
     add_index :currency_rates, %i[from_id to_id]
+    add_index :currency_rates, :created_at
   end
 end
