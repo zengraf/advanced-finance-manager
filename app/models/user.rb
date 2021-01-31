@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
 
-  has_many :currencies
+  has_and_belongs_to_many :currencies, -> { distinct }
   has_many :accounts
   has_many :transactions, through: :accounts
   has_many :areas

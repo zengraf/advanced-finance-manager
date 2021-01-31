@@ -1,0 +1,7 @@
+<div class="row">
+  <h1>Add new currency</h1>
+  <%= form_with url: currencies_path, method: :post do |f| %>
+    <%= f.collection_select :currency_id, Currency.not_belonging_to(current_user), :id, :code %>
+    <%= f.submit 'Add', class: 'btn btn-outline-primary mx-4', role: 'button' %>
+  <% end %>
+</div>
