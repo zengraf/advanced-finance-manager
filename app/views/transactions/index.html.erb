@@ -1,0 +1,24 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Account</th>
+    <th scope="col">Date</th>
+    <th scope="col">Amount</th>
+    <th scope="col">Category</th>
+    <th scope="col">Area</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |t| %>
+      <tr>
+        <th scope="row"><%= link_to t.id, transaction_path(t) %></th>
+        <td><%= link_to t.account.name, account_path(t.area) %></td>
+        <td><%= t.date %></td>
+        <td><%= t.amount %> <%= t.account.currency.code %></td>
+        <td><%= link_to t.category.name, category_path(t.category) %></td>
+        <td><%= link_to t.area.name, area_path(t.area) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
