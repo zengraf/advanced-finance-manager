@@ -11,6 +11,32 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Advanced Finance Manager</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <%= link_to 'Home', root_path, class: "nav-link#{ ' active' if current_page? root_path }" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to 'Transactions', transactions_path, class: "nav-link#{ ' active' if current_page? transactions_path }" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to 'Accounts', accounts_path, class: "nav-link#{ ' active' if current_page? accounts_path }" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to 'Analytics', analytics_path, class: "nav-link#{ ' active' if current_page? analytics_path }" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container" style="margin-top: 8rem">
+      <%= yield %>
+    </div>
   </body>
 </html>
