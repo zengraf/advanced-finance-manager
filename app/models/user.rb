@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   has_many :currencies
   has_many :accounts
-  has_many :transactions
+  has_many :transactions, through: :accounts
   has_many :areas
   has_many :categories
   has_many :loans
