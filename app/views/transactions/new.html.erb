@@ -1,0 +1,20 @@
+<h2>New transaction</h2>
+<div class="row mt-5">
+  <div class="col-12 col-lg-6">
+    <div class="border rounded p-3">
+      <%= form_with model: @transaction do |f| %>
+        <%= f.label :account_id, 'Account:' %><br />
+        <%= f.collection_select :account_id, current_user.accounts, :id, :name %><br /><br />
+        <%= f.label :amount, 'Amount:' %><br />
+        <%= f.text_field :amount, autofocus: true %><br /><br />
+        <%= f.label :date, 'Date:' %><br />
+        <%= f.date_field :date %><br /><br />
+        <%= f.label :category_id, 'Category:' %><br />
+        <%= f.collection_select :category_id, current_user.categories, :id, :name %><br /><br />
+        <%= f.label :area_id, 'Area:' %><br />
+        <%= f.collection_select :area_id, current_user.areas, :id, :name %><br />
+        <%= f.submit 'Create', class: 'btn btn-primary mt-4', role: 'button' %>
+      <% end %>
+    </div>
+  </div>
+</div>

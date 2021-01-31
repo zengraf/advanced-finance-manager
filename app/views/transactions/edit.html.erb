@@ -1,0 +1,18 @@
+<h2>Edit transaction #<%= @transaction.id %></h2>
+<div class="row mt-5">
+  <div class="col-12 col-lg-6">
+    <div class="border rounded p-3">
+      <%= form_with model: @transaction do |f| %>
+        <%= f.label :amount, 'Amount:' %><br />
+        <%= f.text_field :amount, autofocus: true, value: @transaction.amount %><br /><br />
+        <%= f.label :date, 'Date:' %><br />
+        <%= f.date_field :date, value: @transaction.date %><br /><br />
+        <%= f.label :category_id, 'Category:' %><br />
+        <%= f.collection_select :category_id, current_user.categories, :id, :name, value: @transaction.category_id %><br /><br />
+        <%= f.label :area_id, 'Area:' %><br />
+        <%= f.collection_select :area_id, current_user.areas, :id, :name, value: @transaction.area_id %><br />
+        <%= f.submit 'Save', class: 'btn btn-primary mt-4', role: 'button' %>
+      <% end %>
+    </div>
+  </div>
+</div>

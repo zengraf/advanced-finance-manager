@@ -1,2 +1,14 @@
-<h1>Accounts#edit</h1>
-<p>Find me in app/views/accounts/edit.html.erb</p>
+<h2>Edit account</h2>
+<div class="row mt-5">
+  <div class="col-12 col-lg-6">
+    <div class="border rounded p-3">
+      <%= form_with model: @account do |f| %>
+        <%= f.label :name, 'Name:' %><br />
+        <%= f.text_field :name, autofocus: true, value: @account.name %><br /><br />
+        <%= f.label :amount, 'Amount:' %><br />
+        <%= f.text_field :amount, value: @account.amount %><br />
+        <%= f.submit 'Save', class: 'btn btn-primary mt-4', role: 'button' %>
+      <% end %>
+    </div>
+  </div>
+</div>

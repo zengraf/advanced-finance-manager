@@ -1,0 +1,40 @@
+<div class="row border rounded p-3">
+  <div class="col-12 d-flex flex-row justify-content-start align-items-center">
+    <p class="h2 mb-0">Transaction #<%= @transaction.id %></p>
+    <%= link_to 'Edit', edit_transaction_path(@transaction), class: 'btn btn-outline-primary my-3 mx-4', role: 'button' %>
+    <%= link_to 'Delete', transaction_path(@transaction), class: 'btn btn-outline-danger my-3', role: 'button', method: :delete %>
+  </div>
+  <div class="col-12 col-lg-6 mt-3">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Account</th>
+          <td><%= link_to @transaction.account.name, account_path(@transaction.area) %></td>
+        </tr>
+        <tr>
+          <th scope="row">Amount</th>
+          <td><%= @transaction.amount %> <%= @transaction.account.currency.code %></td>
+        </tr>
+        <tr>
+          <th scope="row">Date</th>
+          <td><%= @transaction.date %></td>
+        </tr>
+        <tr>
+          <th scope="row">Category</th>
+          <td><%= link_to @transaction.category.name, category_path(@transaction.category) %></td>
+        </tr>
+        <tr>
+          <th scope="row">Area</th>
+          <td><%= link_to @transaction.area.name, area_path(@transaction.area) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

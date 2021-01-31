@@ -1,2 +1,28 @@
-<h1>Accounts#show</h1>
-<p>Find me in app/views/accounts/show.html.erb</p>
+<div class="row border rounded p-3">
+  <div class="col-12 d-flex flex-row justify-content-start align-items-center">
+    <p class="h2 mb-0"><%= @account.name %></p>
+    <%= link_to 'Edit', edit_account_path(@account), class: 'btn btn-outline-primary my-3 mx-4', role: 'button' %>
+    <%= link_to 'Delete', account_path(@account), class: 'btn btn-outline-danger my-3', role: 'button', method: :delete %>
+  </div>
+  <div class="col-12 col-lg-6 mt-3">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">Currency</th>
+        <td><%= link_to @account.currency.name, currency_path(@account.currency) %></td>
+      </tr>
+      <tr>
+        <th scope="row">Amount</th>
+        <td><%= @account.amount %> <%= @account.currency.code %></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
