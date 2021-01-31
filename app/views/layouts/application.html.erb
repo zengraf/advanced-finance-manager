@@ -36,6 +36,15 @@
       </div>
     </nav>
     <div class="container" style="margin-top: 8rem">
+        <% flash.each do |key, value| %>
+        <% type = 'danger' if key == 'error' %>
+        <% type = 'warning' if key == 'alert' %>
+        <% type = 'info' if key == 'notice' %>
+        <% type ||= key %>
+        <div class="alert alert-<%= type %> my-3 rounded" role="alert">
+          <%= value %>
+        </div>
+        <% end %>
       <%= yield %>
     </div>
   </body>
