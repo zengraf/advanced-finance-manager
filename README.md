@@ -3,7 +3,7 @@ An application for personal finance management, deep analytics and budget monito
 
 ## Who did what
 
-### Illia Andrieiev (k4wel)
+### Illia Andrieiev ([k4wel](https://github.com/k4wel))
 
 - Login and registration
   - [application_controller.rb](app/controllers/application_controller.rb)
@@ -20,7 +20,7 @@ An application for personal finance management, deep analytics and budget monito
   - [show.html.erb](app/views/currencies/show.html.erb) view
   - Part of [currencies_controller.rb](app/controllers/currencies_controller.rb)
 
-### Bohdan Samotys (Samotys)
+### Bohdan Samotys ([Samotys](https://github.com/Samotys))
 
 - Database seeds (currencies, rates)
   - [seeds.rb](db/seeds.rb)
@@ -34,7 +34,7 @@ An application for personal finance management, deep analytics and budget monito
   - [accounts_controller.rb](app/controllers/accounts_controller.rb)
   - [Views](app/views/accounts)
 
-### Hlib Hraif (zengraf)
+### Hlib Hraif ([zengraf](https://github.com/zengraf))
 
 - Create Ruby on Rails project base
   - [Gemfile](Gemfile)
