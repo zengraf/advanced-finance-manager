@@ -1,6 +1,19 @@
 # Advanced Finance Manager
 An application for personal finance management, deep analytics and budget monitoring.
 
+## Usage
+
+- Install `Ruby v2.7.1` with [rvm](https://rvm.io) or [asdf-vm](http://asdf-vm.com/)
+- Install [`node.js`](https://nodejs.org/en/)
+- Install [`PostgresQL`](https://www.postgresql.org) and start the server
+- Install [`yarn`](https://yarnpkg.com/getting-started/install)
+- Go to project's directory
+- Run `bundle install`
+- Run `yarn install`
+- Run `bin/rails db:setup`
+- Run `bin/rails s`
+- Run `sudo python -m smtpd -n -c DebuggingServer localhost:25` to receive e-mails
+
 ## Who did what
 
 ### Illia Andrieiev ([k4wel](https://github.com/k4wel))
