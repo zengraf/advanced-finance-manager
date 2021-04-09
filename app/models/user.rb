@@ -8,11 +8,17 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-
   has_and_belongs_to_many :currencies, -> { distinct }
   has_many :accounts
   has_many :transactions, through: :accounts
   has_many :areas
   has_many :categories
   has_many :loans
+
+  def attributes
+    {
+      username: nil,
+      email: ''
+    }
+  end
 end

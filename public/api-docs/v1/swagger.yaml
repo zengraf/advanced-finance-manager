@@ -1,0 +1,170 @@
+openapi: 3.0.3
+
+info:
+  title: Advanced Finance Manager API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users/sign_in:
+    post:
+      tags:
+        - User
+      security: []
+      summary: Authenticates user and returns Bearer token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                      example: password
+      responses:
+        '201':
+          description: User authenticated
+          headers:
+            authorization:
+              description: Bearer JWT
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/sign_out:
+    delete:
+      tags:
+        - User
+      summary: De-authenticates user and revokes his token
+      responses:
+        '204':
+          description: User de-authenticated
+  /transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Returns list of transactions
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+          format: decimal
+        category:
+          $ref: '#/components/schemas/Category'
+        area:
+          $ref: '#/components/schemas/Area'
+        account:
+          $ref: '#/components/schemas/Account'
+        destination_account:
+          $ref: '#/components/schemas/Account'
+        destination_amount:
+          type: number
+          format: decimal
+        description:
+          type: string
+      required:
+        - id
+        - amount
+        - category
+        - area
+        - account
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        amount:
+          type: number
+          format: decimal
+          description: Account balance
+        currency:
+          $ref: '#/components/schemas/Currency'
+      required:
+        - id
+        - name
+        - amount
+        - currency
+    Area:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: Zloty
+        code:
+          type: string
+          example: PLN
+        number:
+          type: number
+          example: 985
+      required:
+        - id
+        - name
+        - code
+        - number
+      readOnly: true
+  responses:
+    UnauthorizedError:
+      description: You are not authorized to perform this action

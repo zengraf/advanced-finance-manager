@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
   root "welcome#index"
   resources :transactions
   resources :accounts

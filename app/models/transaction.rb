@@ -7,9 +7,23 @@ class Transaction < ApplicationRecord
 
   after_create :alter_account_amount
 
+  def attributes
+    {
+      amount: 0,
+      category: nil,
+      area: nil,
+      account: nil,
+      destination_account: nil,
+      destination_amount: nil
+    }
+  end
+
   private
 
   def alter_account_amount
-    account.increment!(:amount, amount)
+    Account.transaction do
+      account.update(amount: account.amount + amount)
+      destination_account.update(amount: destination_account.amount + destination_amount) if destination_account && destination_amount
+    end
   end
 end
