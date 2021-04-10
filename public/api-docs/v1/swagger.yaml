@@ -58,6 +58,120 @@ paths:
       responses:
         '204':
           description: User de-authenticated
+  /users/confirmation:
+    get:
+      tags:
+        - User
+      summary: Confirms email
+      security: []
+      parameters:
+      - name: confirmation_token
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Successful confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+        '422':
+          description: Email is already confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: array
+                    items:
+                      type: string
+                      example: was already confirmed, please try signing in
+  /users/password:
+    post:
+      tags:
+        - User
+      summary: Sends email with password reset token
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      format: email
+      responses:
+        '201':
+          description: Email with reset token was sent
+          content:
+            application/json:
+              schema:
+                type: object
+        '422':
+          description: Email does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        items:
+                          type: string
+                          example: not found
+  /user/password:
+    put:
+      tags:
+        - User
+      summary: Resets password
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    reset_password_token:
+                      type: string
+                      example: token
+                    password:
+                      type: string
+                      example: new password
+      responses:
+        '204':
+          description: Password was changed. (Be aware that user's authentication token was not revoked)
+        '422':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      reset_password_token:
+                        type: array
+                        items:
+                          type: string
+                          example: is invalid
   /transactions:
     get:
       tags:
@@ -72,7 +186,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
-
 components:
   securitySchemes:
     bearerAuth:
