@@ -63,3 +63,5 @@ gem 'dotenv-rails'
 gem 'rswag-ui'
 
 gem 'http'
+
+gem 'pagy'

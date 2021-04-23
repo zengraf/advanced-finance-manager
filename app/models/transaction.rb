@@ -9,12 +9,15 @@ class Transaction < ApplicationRecord
 
   def attributes
     {
+      id: 0,
       amount: 0,
+      date: Date.today,
       category: nil,
       area: nil,
       account: nil,
       destination_account: nil,
-      destination_amount: nil
+      destination_amount: nil,
+      description: nil
     }
   end
 

@@ -65,9 +65,9 @@ paths:
       summary: Confirms email
       security: []
       parameters:
-      - name: confirmation_token
+      - in: query
+        name: confirmation_token
         required: true
-        type: string
       responses:
         '200':
           description: Successful confirmation
@@ -82,7 +82,7 @@ paths:
                     type: string
                     format: email
         '422':
-          description: Email is already confirmed
+          description: Invalid token
           content:
             application/json:
               schema:
@@ -133,7 +133,6 @@ paths:
                         items:
                           type: string
                           example: not found
-  /user/password:
     put:
       tags:
         - User
@@ -186,6 +185,45 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
+    post:
+      tags:
+        - Transactions
+      summary: Creates a new transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                    date:
+                      type: string
+                      format: date
+                    category_id:
+                      type: integer
+                    area_id:
+                      type: integer
+                    account_id:
+                      type: integer
+                    destination_account_id:
+                      type: integer
+                    destination_amount:
+                      type: number
+                    description:
+                      type: string
+      responses:
+        '201':
+          description: Transaction is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Request is invalid
 components:
   securitySchemes:
     bearerAuth:
@@ -198,9 +236,13 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         amount:
           type: number
           format: decimal
+        date:
+          type: string
+          format: date
         category:
           $ref: '#/components/schemas/Category'
         area:
