@@ -11,6 +11,93 @@ security:
   - bearerAuth: []
 
 paths:
+  /users:
+    post:
+      tags:
+        - Registration
+      security: []
+      summary: Registers a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+      responses:
+        201:
+          description: Confirmation mail is sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+        422:
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      invalid_field_name:
+                        type: array
+                        items:
+                          type: string
+                          example: error message
+  /users/confirmation:
+    get:
+      tags:
+        - Registration
+      summary: Confirms email
+      security: [ ]
+      parameters:
+        - in: query
+          name: confirmation_token
+          required: true
+      responses:
+        '200':
+          description: Successful confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+        '422':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: array
+                    items:
+                      type: string
+                      example: was already confirmed, please try signing in
   /users/sign_in:
     post:
       tags:
@@ -58,41 +145,6 @@ paths:
       responses:
         '204':
           description: User de-authenticated
-  /users/confirmation:
-    get:
-      tags:
-        - User
-      summary: Confirms email
-      security: []
-      parameters:
-      - in: query
-        name: confirmation_token
-        required: true
-      responses:
-        '200':
-          description: Successful confirmation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  email:
-                    type: string
-                    format: email
-        '422':
-          description: Invalid token
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  email:
-                    type: array
-                    items:
-                      type: string
-                      example: was already confirmed, please try signing in
   /users/password:
     post:
       tags:
