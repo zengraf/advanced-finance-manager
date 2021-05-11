@@ -1,31 +1,34 @@
 class AccountsController < ApplicationController
-  before_action :check_account, except: %i[index new create]
+  before_action :check_account, except: %i[index create]
 
   def index
-    @accounts = current_user.accounts
-  end
-
-  def new
-    @account = current_user.accounts.build
+    accounts = current_user.accounts
+    render json: accounts
   end
 
   def create
-    @account = current_user.accounts.create(account_params)
-    redirect_to @account
+    account = current_user.accounts.create!(account_params)
+    render json: account, status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    bad_request_error(e)
   end
 
-  def show; end
-
-  def edit; end
+  def show
+    render json: @account
+  end
 
   def update
-    @account.update(account_params_update)
-    redirect_to @account
+    @account.update!(account_params_update)
+    render json: @account, status: :accepted
+  rescue ActiveRecord::RecordInvalid => e
+    bad_request_error(e)
   end
 
   def destroy
     @account.destroy
-    redirect_to accounts_path
+    render json: {}, status: :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    bad_request_error(e)
   end
 
   private
@@ -40,12 +43,9 @@ class AccountsController < ApplicationController
 
   def check_account
     @account = current_user.accounts.find(params[:id])
-    if @account.nil?
-      flash[:danger] = 'Account does not exist or does not belong to user'
-      redirect_to transactions_path
-      return
-    end
-
     true
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Account does not exist or does not belong to user'] }, status: :not_found
+    return false
   end
 end

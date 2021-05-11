@@ -188,7 +188,7 @@ paths:
     post:
       tags:
         - Transactions
-      summary: Creates a new transaction
+      summary: Creates new transaction
       requestBody:
         content:
           application/json:
@@ -224,6 +224,142 @@ paths:
                 $ref: '#/components/schemas/Transaction'
         '400':
           description: Request is invalid
+
+  /accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Returns list of accounts
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      tags:
+        - Accounts
+      summary: Creates account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    amount:
+                      type: integer
+                    currency_id:
+                      type: integer
+      responses:
+        201:
+          description: Account is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        400:
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      invalid_field_name:
+                        type: array
+                        items:
+                          type: string
+                          example: error message
+  /accounts/$id:
+    get:
+      tags:
+        - Accounts
+      summary: Gets account by $id
+      responses:
+        200:
+          description: Account object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        404:
+          description: Account does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Account does not exist or does not belong to user
+    put:
+      tags:
+        - Accounts
+      summary: Edits account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      exaple: new name
+                    amount:
+                      type: integer
+      responses:
+        202:
+          description: Account is changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        404:
+          description: Account does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Account does not exist or does not belong to user
+    delete:
+      tags:
+        - Accounts
+      summary: Deletes account by $id
+      responses:
+        204:
+          description: Account is deleted
+        404:
+          description: Account does not exist or does not belong to user
+          content:
+             application/json:
+               schema:
+                 type: object
+                 properties:
+                   errors:
+                     type: array
+                     items:
+                       type: string
+                       example: Account does not exist or does not belong to user
 components:
   securitySchemes:
     bearerAuth:
