@@ -10,6 +10,6 @@ Rails.application.routes.draw do
     end
   end
   resources :currencies, except: %i[edit update]
-  devise_for :users, defaults: {format: :json}
+  devise_for :users, controllers: {passwords: 'passwords'}, defaults: {format: :json}
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

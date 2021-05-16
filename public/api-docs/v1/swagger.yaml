@@ -207,7 +207,7 @@ paths:
                       example: new password
       responses:
         '204':
-          description: Password was changed. (Be aware that user's authentication token was not revoked)
+          description: Password was changed and JWT token was revoked
         '422':
           description: Invalid token
           content:
