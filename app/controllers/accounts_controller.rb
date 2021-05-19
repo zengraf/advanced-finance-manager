@@ -25,7 +25,7 @@ class AccountsController < ApplicationController
   end
 
   def destroy
-    @account.destroy
+    @account.destroy!
     render json: {}, status: :no_content
   rescue ActiveRecord::RecordInvalid => e
     bad_request_error(e)

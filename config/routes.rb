@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   root "welcome#index"
   resources :transactions
   resources :accounts
+  resources :categories
+  resources :areas
   resources :analytics, only: :index do
     collection do
       resources :categories, except: :index
