@@ -9,4 +9,8 @@ class Area < ApplicationRecord
       name: "",
     }
   end
+
+  def total_this_month
+    transactions.months(Date.current).sum(:amount)
+  end
 end

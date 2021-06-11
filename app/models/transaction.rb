@@ -5,6 +5,8 @@ class Transaction < ApplicationRecord
   belongs_to :destination_account, class_name: 'Account', foreign_key: 'destination_account_id', optional: true
   has_one :loan, inverse_of: :exchanges
 
+  scope :months, ->(first, last = nil) { where('date > ? AND date < ?', first.beginning_of_month, (last || first).end_of_month) }
+
   after_create :alter_account_amount
 
   def attributes

@@ -2,8 +2,8 @@ class AreasController < ApplicationController
   before_action :check_area, except: %i[index create]
 
   def index
-    area = current_user.categories
-    render json: area
+    areas = current_user.areas
+    render json: areas
   end
 
   def create
@@ -14,7 +14,7 @@ class AreasController < ApplicationController
   end
 
   def show
-    render json: @area
+    render json: @area, methods: :total_this_month
   end
 
   def update
@@ -37,7 +37,7 @@ class AreasController < ApplicationController
     @area = current_user.areas.find(params[:id])
     true
   rescue ActiveRecord::RecordNotFound => e
-    render json: { errors: ['Area does not exist or does not belong to user']}, status: :not_found
+    render json: { errors: ['Area does not exist']}, status: :not_found
     false
   end
 
