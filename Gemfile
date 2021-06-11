@@ -65,3 +65,5 @@ gem 'rswag-ui'
 gem 'http'
 
 gem 'pagy'
+
+gem 'rack-cors'

@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
-  before_action :account_belongs_to_user?, only: :create
-  before_action :transaction_belongs_to_user?, except: %i[index create]
+  before_action :check_account, only: :create
+  before_action :check_transaction, except: %i[index create]
 
   def index
     @pagy, transactions = pagy(current_user.transactions)
@@ -38,30 +38,28 @@ class TransactionsController < ApplicationController
     params.require(:transaction).permit(:amount, :date, :category_id, :area_id, :destination_account_id, :destination_amount, :description)
   end
 
-  def account_belongs_to_user?
-    if account.nil?
-      render json: { errors: ['Account does not exist'] }, status: :not_found
-      return false
-    end
+  def transaction
+    @transaction ||= current_user.transactions.find(params[:id])
+  end
 
+  def check_transaction
+    transaction
     true
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Transaction does not exist'] }, status: :not_found
+    false
   end
 
   def account
-    @account ||= current_user.accounts.find(params[:transaction][:account_id])
+    @account ||= current_user.accounts.find(params[:id])
   end
 
-  def transaction_belongs_to_user?
-    if transaction.nil?
-      render json: { errors: ['Transaction does not exist'] }, status: :not_found
-      return false
-    end
-
+  def check_account
+    account
     true
-  end
-
-  def transaction
-    @transaction ||= current_user.transactions.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Account does not exist'] }, status: :not_found
+    return false
   end
 end
 
