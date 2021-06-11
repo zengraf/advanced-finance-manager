@@ -377,13 +377,7 @@ paths:
               type: object
               properties:
                 account:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      example: new name
-                    amount:
-                      type: integer
+                  $ref: '#/components/schemas/Account'
       responses:
         202:
           description: Account is changed
@@ -427,6 +421,151 @@ paths:
                      items:
                        type: string
                        example: Account does not exist or does not belong to user
+  /areas:
+    get:
+      tags:
+        - Areas
+      summary: Returns list of areas
+      responses:
+        '200':
+          description: List of areas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Area'
+    post:
+      tags:
+        - Areas
+      summary: Creates area
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    amount:
+                      type: integer
+                    currency_id:
+                      type: integer
+      responses:
+        201:
+          description: Account is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        400:
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      invalid_field_name:
+                        type: array
+                        items:
+                          type: string
+                          example: error message
+  /areas/{id}:
+    get:
+      tags:
+        - Areas
+      summary: Gets area
+      parameters:
+        - name: id
+          in: path
+          description: ID of area
+          required: true
+      responses:
+        200:
+          description: Area object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        404:
+          description: Area does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Area does not exist or does not belong to user
+    put:
+      tags:
+        - Areas
+      summary: Edits area
+      parameters:
+        - name: id
+          in: path
+          description: ID of area
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/Account'
+      responses:
+        202:
+          description: Area is changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        404:
+          description: Area does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Area does not exist or does not belong to user
+    delete:
+      tags:
+        - Areas
+      summary: Deletes area
+      parameters:
+        - name: id
+          in: path
+          description: ID of area
+          required: true
+      responses:
+        204:
+          description: Area is deleted
+        404:
+          description: Area does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Area does not exist or does not belong to user
+
 components:
   securitySchemes:
     bearerAuth:
