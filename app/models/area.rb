@@ -10,7 +10,11 @@ class Area < ApplicationRecord
     }
   end
 
-  def total_this_month
-    transactions.months(Date.current).sum(:amount)
+  def total_for_categories(from, to = nil)
+    transactions.months(from, to).group(:category).sum(:amount)
+  end
+
+  def total_for_area(from, to)
+    transactions.months(from, to).sum(:amount)
   end
 end

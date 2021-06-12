@@ -51,7 +51,7 @@ class TransactionsController < ApplicationController
   end
 
   def account
-    @account ||= current_user.accounts.find(params[:id])
+    @account ||= current_user.accounts.find(params[:transaction][:account_id])
   end
 
   def check_account
