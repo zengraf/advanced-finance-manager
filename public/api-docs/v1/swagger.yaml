@@ -41,13 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  email:
-                    type: string
-                    format: email
+                $ref: "#/components/schemas/User"
         422:
           description: Request body is invalid
           content:
@@ -63,6 +57,25 @@ paths:
                         items:
                           type: string
                           example: error message
+    patch:
+      tags:
+        - User
+      summary: Updates user info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: User info is changed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /users/confirmation:
     get:
       tags:
@@ -79,13 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  email:
-                    type: string
-                    format: email
+                $ref: "#/components/schemas/User"
         '422':
           description: Invalid token
           content:
@@ -128,13 +135,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  email:
-                    type: string
-                    format: email
+                $ref: "#/components/schemas/User"
         '401':
           $ref: '#/components/responses/UnauthorizedError'
   /users/sign_out:
@@ -662,6 +663,15 @@ components:
         - code
         - number
       readOnly: true
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        avatar_url:
+          type: string
   responses:
     UnauthorizedError:
       description: You are not authorized to perform this action

@@ -3,7 +3,10 @@ class TransactionsController < ApplicationController
   before_action :check_transaction, except: %i[index create]
 
   def index
-    @pagy, transactions = pagy(current_user.transactions)
+    transactions = current_user.transactions.eager_load(category: [], area: [], account: [:currency]).order(date: :asc)
+    transactions = transactions.reorder(params[:sort_by] => params[:direction] || :asc, date: :asc) if params[:sort_by]
+
+    @pagy, transactions = pagy(transactions)
     render json: transactions
   end
 

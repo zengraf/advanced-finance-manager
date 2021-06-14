@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   root "welcome#index"
+  resource :user, only: %i[show update], controller: :user
   resources :transactions
   resources :accounts
   resources :categories

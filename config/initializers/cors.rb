@@ -9,12 +9,12 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:3000', '192.168.1.31:3000', '192.168.1.242:3000'
+    origins '*'
 
     resource '*',
              headers: :any,
              methods: [:get, :post, :delete, :put, :patch, :options, :head],
-             expose: ['Authorization']
+             expose: %w[Authorization Total-Pages]
 
   end
 end
