@@ -1,6 +1,7 @@
 class Currency < ApplicationRecord
   has_and_belongs_to_many :users
-  has_many :currency_rates, foreign_key: "from_id"
+  has_many :purchase_rates, class_name: 'CurrencyRate', foreign_key: "to_id"
+  has_many :selling_rates, class_name: 'CurrencyRate', foreign_key: "from_id"
 
   scope :not_belonging_to, ->(user) { where.not(id: user.currencies.select(:id)) }
 

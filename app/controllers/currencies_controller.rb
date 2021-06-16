@@ -6,7 +6,9 @@ class CurrenciesController < ApplicationController
   end
 
   def show
-    render json: @currency
+    render json: {currency: @currency,
+                  purchase_rates: @currency.purchase_rates.includes(:from, :to),
+                  selling_rates: @currency.selling_rates.includes(:to, :from)}
   end
 
   def create
