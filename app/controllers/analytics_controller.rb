@@ -11,14 +11,23 @@ class AnalyticsController < ApplicationController
       to = from.end_of_month
     end
 
-    response = {}
-    response[:areas] = transactions(from, to).group(:area).sum(:amount).map{|k, v| k.as_json.merge({total: v})}
-    response[:categories] = transactions(from, to).group(:category).sum(:amount).map{|k, v| k.as_json.merge({total: v})}
+    currencyId = params[:currencyId] || current_user.currencies.first.id
+    currency = current_user.currencies.find(currencyId)
 
+    response = {currency: currency}
+    response[:areas] = transactions(from, to).with_exchange_rate(currencyId)
+                                             .group(:area).sum("transactions.amount * rate")
+                                             .map{|k, v| k.as_json.merge({total: v})}
+    response[:categories] = transactions(from, to).with_exchange_rate(currencyId)
+                                                  .group(:category).sum("transactions.amount * rate")
+                                                  .map{|k, v| k.as_json.merge({total: v})}
     render json: response
-  rescue Date::Error => e
+  rescue Date::Error
     render json: { errors: ['Invalid date']}, status: :bad_request
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Currency does not exist or does not belong to this user']}, status: :not_found
   end
+
 
   private
 
@@ -29,4 +38,5 @@ class AnalyticsController < ApplicationController
   def period_params
     params.permit(:from, :to)
   end
+
 end

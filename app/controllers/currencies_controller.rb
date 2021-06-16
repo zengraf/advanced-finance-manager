@@ -1,23 +1,32 @@
 class CurrenciesController < ApplicationController
+  before_action :check_currency, only: %i[show destroy]
+
   def index
-    @currencies = current_user&.currencies
+    render json: current_user.currencies
   end
 
   def show
-    @currency = Currency.find(params[:id])
-    @purchase_rates = CurrencyRate.where(to_id: params[:id], from: current_user.currencies).includes(:from).order(from_id: :asc)
-    @selling_rates = CurrencyRate.where(from_id: params[:id], to: current_user.currencies).includes(:to).order(to_id: :asc)
+    render json: @currency
   end
 
-  def new; end
-
   def create
-    current_user.currencies << Currency.find(params[:currency_id])
-    redirect_to currencies_path
+    current_user.currencies << Currency.find( params[:id])
+    render json: current_user.currencies, status: :created
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Currency does not exist'] }, status: :not_found
   end
 
   def destroy
-    current_user.currencies.delete(Currency.find(params[:id]))
-    redirect_to currencies_path
+    current_user.currencies.destroy(@currency.id)
+  end
+
+  private
+
+  def check_currency
+    @currency = current_user.currencies.find(params[:id])
+    true
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Currency does not exist or does not belong to this user'] }, status: :not_found
+    false
   end
 end
