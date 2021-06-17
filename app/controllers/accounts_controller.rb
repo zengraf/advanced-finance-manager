@@ -13,12 +13,13 @@ class AccountsController < ApplicationController
       currency = current_user.currencies.first || Currency.first
     end
     totals = current_user.accounts.includes(:currency).group(:currency).sum(:amount)
+    rates = Hash[current_user.accounts.includes(currency: :selling_rates).map(&:currency).uniq.map { |c| [c.id, c.selling_rates] }]
 
     render json: {
       totals: totals.map { |c, t| { currency: c, value: t } },
       grand_total: {
         currency: currency,
-        value: totals.inject(0) { |sum, total| sum + total.last * (total.first.selling_rates.where(to: currency).first&.rate || 1) }
+        value: totals.inject(0) { |sum, total| sum + total.last * (rates[total.first.id].find { |rate| rate.to_id == currency.id }&.rate || 1.0) }
       }
     }
   end

@@ -1,5 +1,5 @@
 class CurrenciesController < ApplicationController
-  before_action :check_currency, only: %i[show destroy]
+  before_action :check_currency, except: :index
 
   def index
     render json: Currency.all
@@ -10,14 +10,13 @@ class CurrenciesController < ApplicationController
   end
 
   def create
-    current_user.currencies << Currency.find(params[:id])
+    current_user.currencies << @currency
     render json: current_user.currencies, status: :created
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: ['Currency does not exist'] }, status: :not_found
   end
 
   def destroy
     current_user.currencies.destroy(@currency.id)
+    render json: {}, status: :no_content
   end
 
   private
