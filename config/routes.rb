@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     end
   end
   resources :currencies, except: %i[edit update]
+  resources :wishes
   devise_for :users, controllers: {passwords: 'passwords'}, defaults: {format: :json}
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

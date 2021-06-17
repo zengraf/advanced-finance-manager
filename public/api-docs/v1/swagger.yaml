@@ -612,14 +612,14 @@ paths:
               type: object
               properties:
                 account:
-                  $ref: '#/components/schemas/Account'
+                  $ref: '#/components/schemas/Area'
       responses:
         202:
           description: Area is changed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/Area'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -706,7 +706,154 @@ paths:
                           $ref: "#/components/schemas/CurrencyRate"
         401:
           $ref: '#/components/responses/UnauthorizedError'
-
+  /wishes:
+    get:
+      tags:
+        - Wishes
+      summary: Returns list of wishes
+      responses:
+        '200':
+          description: List of wishes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wish'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Wishes
+      summary: Creates wish
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              account:
+                $ref: '#/components/schemas/Wish'
+      responses:
+        201:
+          description: Wish is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wish'
+        400:
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      invalid_field_name:
+                        type: array
+                        items:
+                          type: string
+                          example: error message
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /wishes/{id}:
+    get:
+      tags:
+        - Wishes
+      summary: Gets wish with given id
+      parameters:
+        - in: path
+          name: id
+          description: ID of wish
+          required: true
+      responses:
+        200:
+          description: Wish info
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wish'
+        404:
+          description: Wish does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Wish does not exist or does not belong to this user
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      tags:
+        - Wishes
+      summary: Edits wish
+      parameters:
+        - in: path
+          name: id
+          description: ID of wish
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wish:
+                  $ref: '#/components/schemas/Wish'
+      responses:
+        200:
+          description: Wish is changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wish'
+        404:
+          description: Wish does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Wish does not exist or does not belong to this user
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - Wishes
+      summary: Deletes wish
+      parameters:
+        - name: id
+          in: path
+          description: ID of area
+          required: true
+      responses:
+        204:
+          description: Wish is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Wish does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Wish does not exist or does not belong to this user
 components:
   securitySchemes:
     bearerAuth:
@@ -814,6 +961,27 @@ components:
           type: string
         rate:
           type: number
+    Wish:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+          example: My wish
+        url:
+          type: string
+          example: google.com
+        amount:
+          type: number
+          format: decimal
+          example: 128.0
+        currency:
+          $ref: '#/components/schemas/Currency'
+      required:
+        - id
+        - currency
+        - amount
     User:
       type: object
       properties:

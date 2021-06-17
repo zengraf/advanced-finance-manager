@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :areas
   has_many :categories
   has_many :loans
+  has_many :wishes
 
   has_one_attached :avatar
 

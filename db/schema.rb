@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_13_182933) do
+ActiveRecord::Schema.define(version: 2021_06_17_184338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,18 @@ ActiveRecord::Schema.define(version: 2021_06_13_182933) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "wishes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "amount", precision: 20, scale: 2
+    t.bigint "currency_id", null: false
+    t.string "description"
+    t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["currency_id"], name: "index_wishes_on_currency_id"
+    t.index ["user_id"], name: "index_wishes_on_user_id"
+  end
+
   add_foreign_key "accounts", "currencies"
   add_foreign_key "accounts", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -156,4 +168,6 @@ ActiveRecord::Schema.define(version: 2021_06_13_182933) do
   add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "areas"
   add_foreign_key "transactions", "categories"
+  add_foreign_key "wishes", "currencies"
+  add_foreign_key "wishes", "users"
 end
