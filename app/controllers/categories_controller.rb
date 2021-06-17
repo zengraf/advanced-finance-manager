@@ -25,10 +25,16 @@ class CategoriesController < ApplicationController
       to = from.end_of_month
     end
 
-    response = @category.as_json
-    response[:total] = @category.total_for_category(from, to)
-    areas_sums = @category.total_for_areas(from, to)
-    response[:areas] = areas_sums.map { |k, v| k.as_json.merge({total: v})  }
+    currency_id = params[:currencyId] || current_user.currencies.first.id
+    currency = current_user.currencies.find(currency_id)
+
+    response = {currency: currency}
+    category_transactions = @category.transactions.months(from, to).includes(account: {currency: :selling_rates}, area: {}, category: {})
+
+    response[:category] = @category.as_json.merge({total: sum_with_conversion(category_transactions, currency)})
+    response[:category][:areas] = category_transactions.group_by(&:area).map do |area, transactions|
+      area.as_json.merge({total: sum_with_conversion(transactions, currency)})
+    end
 
     render json: response
   rescue Date::Error => e
@@ -65,5 +71,11 @@ class CategoriesController < ApplicationController
 
   def period_params
     params.permit(:from, :to)
+  end
+
+  def sum_with_conversion(transactions, target_currency)
+    transactions.map do |transaction|
+      transaction.amount * (transaction.account.currency.selling_rates.find { |rate| rate.to_id == target_currency.id }&.rate || 1.0)
+    end.sum
   end
 end
