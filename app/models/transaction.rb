@@ -9,7 +9,7 @@ class Transaction < ApplicationRecord
     where('date > ? AND date < ?', first, (last || first.end_of_month))
   }
 
-  after_create :alter_account_amount
+  before_save :alter_account_amount
 
   def attributes
     {
@@ -30,7 +30,7 @@ class Transaction < ApplicationRecord
 
   def alter_account_amount
     Account.transaction do
-      account.update(amount: account.amount + amount)
+      account.update(amount: account.amount + (amount - (amount_was || 0)))
       destination_account.update(amount: destination_account.amount + destination_amount) if destination_account && destination_amount
     end
   end

@@ -1,12 +1,15 @@
 class CurrenciesController < ApplicationController
-  before_action :check_currency, except: :index
+  before_action :check_currency, except: [:index, :show]
 
   def index
     render json: Currency.all
   end
 
   def show
-    render json: @currency, include: [:selling_rates, :purchase_rates]
+    render json: Currency.includes(selling_rates: [:from, :to], purchase_rates: [:from, :to]).find(params[:id]), include: [:selling_rates, :purchase_rates]
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Currency does not exist'] }, status: :not_found
+    false
   end
 
   def create

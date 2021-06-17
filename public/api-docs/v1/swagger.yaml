@@ -955,13 +955,14 @@ paths:
       tags:
         - Wishes
       summary: Creates wish
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              account:
-                $ref: '#/components/schemas/Wish'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/Wish'
       responses:
         201:
           description: Wish is created
