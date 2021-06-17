@@ -320,7 +320,101 @@ paths:
           description: Request is invalid
         401:
           $ref: '#/components/responses/UnauthorizedError'
-
+  /transactions/{id}:
+    get:
+      tags:
+        - Transactions
+      summary: Gets transaction
+      parameters:
+        - name: id
+          in: path
+          description: ID of transaction
+          required: true
+      responses:
+        200:
+          description: Transaction object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Transaction does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Transaction does not exist
+    put:
+      tags:
+        - Transactions
+      summary: Edits transaction
+      parameters:
+        - name: id
+          in: path
+          description: ID of transaction
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/Transaction'
+      responses:
+        200:
+          description: Transaction is changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Transaction does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Transaction does not exist
+    delete:
+      tags:
+        - Transactions
+      summary: Deletes transaction
+      parameters:
+        - name: id
+          in: path
+          description: ID of transaction
+          required: true
+      responses:
+        204:
+          description: transaction is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Account does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Transaction does not exist
   /accounts:
     get:
       tags:
@@ -706,6 +800,141 @@ paths:
                           $ref: "#/components/schemas/CurrencyRate"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Returns list of categories
+      responses:
+        200:
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Categories
+      summary: Creates new category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: object
+                  $ref: '#/components/schemas/Category'
+      responses:
+        201:
+          description: Category is created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          description: Request is invalid
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /categories/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Gets category
+      parameters:
+        - name: id
+          in: path
+          description: ID of category
+          required: true
+      responses:
+        200:
+          description: Category object
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Category does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Category does not exist or does not belong to this user
+    put:
+      tags:
+        - Categories
+      summary: Edits category
+      parameters:
+        - name: id
+          in: path
+          description: ID of category
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: '#/components/schemas/Category'
+      responses:
+        200:
+          description: Category is changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Category does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Category does not exist or does not belong to this user
+    delete:
+      tags:
+        - Categories
+      summary: Deletes category
+      parameters:
+        - name: id
+          in: path
+          description: ID of category
+          required: true
+      responses:
+        204:
+          description: Category is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Category does not exist or does not belong to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Category does not exist or does not belong to this user
   /wishes:
     get:
       tags:

@@ -61,7 +61,7 @@ class CategoriesController < ApplicationController
     @category = current_user.categories.find(params[:id])
     true
   rescue ActiveRecord::RecordNotFound => e
-    render json: { errors: ['Category does not exist or does not belong to user']}, status: :not_found
+    render json: { errors: ['Category does not exist or does not belong to this user']}, status: :not_found
     false
   end
 
