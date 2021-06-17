@@ -1,6 +1,6 @@
 class UserController < ApplicationController
   def show
-    render json: current_user
+    render json: current_user, include: :currencies
   end
 
   def update

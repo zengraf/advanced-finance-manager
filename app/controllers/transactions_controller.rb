@@ -22,8 +22,8 @@ class TransactionsController < ApplicationController
   end
 
   def update
-    updated_transaction = transaction.update!(transaction_params)
-    render json: updated_transaction, status: :ok
+    transaction.update!(transaction_params)
+    render json: transaction, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     bad_request_error(e)
   end
@@ -38,7 +38,7 @@ class TransactionsController < ApplicationController
   private
 
   def transaction_params
-    params.require(:transaction).permit(:amount, :date, :category_id, :area_id, :destination_account_id, :destination_amount, :description)
+    params.require(:transaction).permit(:amount, :date, :account_id, :category_id, :area_id, :destination_account_id, :destination_amount, :description)
   end
 
   def transaction

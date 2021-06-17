@@ -2,17 +2,15 @@ class CurrenciesController < ApplicationController
   before_action :check_currency, only: %i[show destroy]
 
   def index
-    render json: current_user.currencies
+    render json: Currency.all
   end
 
   def show
-    render json: {currency: @currency,
-                  purchase_rates: @currency.purchase_rates.includes(:from, :to),
-                  selling_rates: @currency.selling_rates.includes(:to, :from)}
+    render json: @currency, include: [:selling_rates, :purchase_rates]
   end
 
   def create
-    current_user.currencies << Currency.find( params[:id])
+    current_user.currencies << Currency.find(params[:id])
     render json: current_user.currencies, status: :created
   rescue ActiveRecord::RecordNotFound
     render json: { errors: ['Currency does not exist'] }, status: :not_found
@@ -25,10 +23,10 @@ class CurrenciesController < ApplicationController
   private
 
   def check_currency
-    @currency = current_user.currencies.find(params[:id])
+    @currency = Currency.find(params[:id])
     true
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: ['Currency does not exist or does not belong to this user'] }, status: :not_found
+    render json: { errors: ['Currency does not exist'] }, status: :not_found
     false
   end
 end

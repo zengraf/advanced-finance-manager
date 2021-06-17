@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   root "welcome#index"
   resource :user, only: %i[show update], controller: :user
   resources :transactions
-  resources :accounts
+  resources :accounts do
+    get :summary, on: :collection
+  end
   resources :categories
   resources :areas
   resources :analytics, only: :index do

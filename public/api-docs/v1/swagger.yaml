@@ -11,6 +11,43 @@ security:
   - bearerAuth: []
 
 paths:
+  /user:
+    get:
+      tags:
+        - User
+      summary: Gets user data
+      responses:
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/User"
+                  - type: object
+                    properties:
+                      currencies:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CurrencyRate"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    patch:
+      tags:
+        - User
+      summary: Updates user data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: User data successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /users:
     post:
       tags:
@@ -60,7 +97,7 @@ paths:
     patch:
       tags:
         - User
-      summary: Updates user info
+      summary: Updates registration
       requestBody:
         content:
           application/json:
@@ -87,13 +124,13 @@ paths:
           name: confirmation_token
           required: true
       responses:
-        '200':
+        200:
           description: Successful confirmation
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        '422':
+        422:
           description: Invalid token
           content:
             application/json:
@@ -127,7 +164,7 @@ paths:
                       type: string
                       example: password
       responses:
-        '201':
+        201:
           description: User authenticated
           headers:
             authorization:
@@ -136,7 +173,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        '401':
+        401:
           $ref: '#/components/responses/UnauthorizedError'
   /users/sign_out:
     delete:
@@ -144,8 +181,10 @@ paths:
         - User
       summary: De-authenticates user and revokes his token
       responses:
-        '204':
+        204:
           description: User de-authenticated
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   /users/password:
     post:
       tags:
@@ -230,7 +269,7 @@ paths:
         - Transactions
       summary: Returns list of transactions
       responses:
-        '200':
+        200:
           description: List of transactions
           content:
             application/json:
@@ -238,6 +277,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
         - Transactions
@@ -269,14 +310,16 @@ paths:
                     description:
                       type: string
       responses:
-        '201':
+        201:
           description: Transaction is created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transaction'
-        '400':
+        400:
           description: Request is invalid
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
 
   /accounts:
     get:
@@ -284,7 +327,7 @@ paths:
         - Accounts
       summary: Returns list of accounts
       responses:
-        '200':
+        200:
           description: List of transactions
           content:
             application/json:
@@ -292,6 +335,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Account'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
         - Accounts
@@ -333,6 +378,41 @@ paths:
                         items:
                           type: string
                           example: error message
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /accounts/summary:
+    get:
+      tags:
+        - Accounts
+      summary: Gets accounts summary
+      parameters:
+        - in: query
+          name: currency_id
+          description: ID of the currency for grand total
+      responses:
+        200:
+          description: Accounts summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        currency:
+                          $ref: "#/components/schemas/Currency"
+                        value:
+                          type: number
+                  grand_total:
+                    type: object
+                    properties:
+                      currency:
+                        $ref: "#/components/schemas/Currency"
+                      value:
+                        type: number
   /accounts/{id}:
     get:
       tags:
@@ -350,6 +430,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Account does not exist or does not belong to user
           content:
@@ -386,6 +468,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Account does not exist or does not belong to user
           content:
@@ -410,6 +494,8 @@ paths:
       responses:
         204:
           description: Account is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Account does not exist or does not belong to user
           content:
@@ -477,6 +563,8 @@ paths:
                         items:
                           type: string
                           example: error message
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   /areas/{id}:
     get:
       tags:
@@ -494,6 +582,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Area'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Area does not exist or does not belong to user
           content:
@@ -530,6 +620,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Area does not exist or does not belong to user
           content:
@@ -554,6 +646,8 @@ paths:
       responses:
         204:
           description: Area is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Area does not exist or does not belong to user
           content:
@@ -566,6 +660,52 @@ paths:
                     items:
                       type: string
                       example: Area does not exist or does not belong to user
+  /currencies:
+    get:
+      tags:
+        - Currencies
+      summary: Gets currencies selected by the user
+      responses:
+        200:
+          description: Currecies info
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Currency"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /currencies/{id}:
+    get:
+      tags:
+        - Currencies
+      summary: Gets currency info and rates
+      parameters:
+        - in: path
+          name: id
+          description: ID of currency
+          required: true
+      responses:
+        200:
+          description: Currecy info and rates
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Currency"
+                  - type: object
+                    properties:
+                      selling_rates:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CurrencyRate"
+                      purchase_rates:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CurrencyRate"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
 
 components:
   securitySchemes:
@@ -663,6 +803,17 @@ components:
         - code
         - number
       readOnly: true
+    CurrencyRate:
+      type: object
+      properties:
+        from:
+          $ref: "#/components/schemas/Currency"
+        to:
+          $ref: "#/components/schemas/Currency"
+        source:
+          type: string
+        rate:
+          type: number
     User:
       type: object
       properties:
@@ -670,6 +821,7 @@ components:
           type: string
         email:
           type: string
+          readOnly: true
         avatar_url:
           type: string
   responses:
