@@ -9,6 +9,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
+  attribute :primary_currency, default: Currency.first
+
+  belongs_to :primary_currency, class_name: 'Currency'
   has_and_belongs_to_many :currencies, -> { distinct }
   has_many :accounts
   has_many :transactions, through: :accounts
@@ -19,12 +22,15 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
+  before_save :add_primary_currency
+
   validates :username, presence: true, uniqueness: true
 
   def attributes
     {
       username: nil,
       email: '',
+      primary_currency: Currency.first,
       avatar_url: nil
     }
   end
@@ -33,5 +39,11 @@ class User < ApplicationRecord
     return nil unless avatar.attached?
 
     rails_blob_url(avatar)
+  end
+
+  private
+
+  def add_primary_currency
+    currencies << primary_currency
   end
 end

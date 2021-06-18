@@ -1,7 +1,7 @@
 class AddJtiToUser < ActiveRecord::Migration[6.1]
   def change
     add_column :users, :jti, :string
-    User.all.each do |user|
+    User.find_each do |user|
       user.update_column(:jti, SecureRandom.uuid)
     end
     change_column_null :users, :jti, false

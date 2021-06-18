@@ -44,7 +44,7 @@ class AreasController < ApplicationController
   end
 
   def update
-    @area.update!(category_params)
+    @area.update!(area_params)
     render json: @area, status: :accepted
   rescue ActiveRecord::RecordInvalid => e
     bad_request_error(e)
@@ -68,7 +68,7 @@ class AreasController < ApplicationController
   end
 
   def area_params
-    params.require(:area).permit(:name)
+    params.require(:area).permit(:name, :limit)
   end
 
   def period_params
