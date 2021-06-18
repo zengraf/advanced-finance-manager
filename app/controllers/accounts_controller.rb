@@ -10,7 +10,7 @@ class AccountsController < ApplicationController
     if params[:currency_id]
       currency = Currency.find(params[:currency_id])
     else
-      currency = current_user.currencies.first || Currency.first
+      currency = current_user.primary_currency
     end
     totals = current_user.accounts.includes(:currency).group(:currency).sum(:amount)
     rates = Hash[current_user.accounts.includes(currency: :selling_rates).map(&:currency).uniq.map { |c| [c.id, c.selling_rates] }]

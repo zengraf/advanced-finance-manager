@@ -12,8 +12,11 @@ class AnalyticsController < ApplicationController
       to = from.end_of_month
     end
 
-    currency_id = params[:currencyId] || current_user.currencies.first&.id || Currency.first.id
-    currency = Currency.find(currency_id)
+    if params.has_key?(:currency_id)
+      currency = Currency.find(params[:currency_id])
+    else
+      currency = current_user.primary_currency
+    end
 
     response = {currency: currency}
     transactions = current_user.transactions.months(from, to).includes(account: {currency: :selling_rates}, area: {}, category: {})

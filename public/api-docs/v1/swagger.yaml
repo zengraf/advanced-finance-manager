@@ -477,6 +477,9 @@ paths:
       parameters:
         - in: query
           name: currency_id
+          schema:
+            type: integer
+            default: User's primary currency
           description: ID of the currency for grand total
       responses:
         200:
@@ -659,10 +662,10 @@ paths:
             default: end of month from date in previons parameter
           description: upper limit for transactions' dates
           required: false
-        - name: currencyId
+        - name: currency_id
           schema:
             type: integer
-            default: first currency selected by user, if user did not select any currency then the first global currency
+            default: user's primary currency
           description: id of currency that sums are converted to
           required: false
       responses:
@@ -950,10 +953,10 @@ paths:
             default: end of month from date in previons parameter
           description: upper limit for transactions' dates
           required: false
-        - name: currencyId
+        - name: currency_id
           schema:
             type: integer
-            default: first currency selected by user, if user did not select any currency then the first global currency
+            default: user's primary currency
           description: id of currency that sums are converted to
           required: false
       responses:
@@ -1219,10 +1222,10 @@ paths:
             default: end of month from date in previons parameter
           description: upper limit for transactions' dates
           required: false
-        - name: currencyId
+        - name: currency_id
           schema:
             type: integer
-            default: first currency selected by user, if user did not select any currency then the first global currency
+            default: user's primary currency
           description: id of currency that sums are converted to
           required: false
       responses:
