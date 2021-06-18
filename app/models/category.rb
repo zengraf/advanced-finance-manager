@@ -6,6 +6,7 @@ class Category < ApplicationRecord
     {
       id: 0,
       name: "",
+      limit: nil,
     }
   end
 

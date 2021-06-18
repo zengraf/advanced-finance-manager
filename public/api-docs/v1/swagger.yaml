@@ -48,6 +48,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   /users:
     post:
       tags:
@@ -113,6 +117,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   /users/confirmation:
     get:
       tags:
@@ -204,13 +210,13 @@ paths:
                       type: string
                       format: email
       responses:
-        '201':
+        201:
           description: Email with reset token was sent
           content:
             application/json:
               schema:
                 type: object
-        '422':
+        422:
           description: Email does not exist
           content:
             application/json:
@@ -246,9 +252,9 @@ paths:
                       type: string
                       example: new password
       responses:
-        '204':
+        204:
           description: Password was changed and JWT token was revoked
-        '422':
+        422:
           description: Invalid token
           content:
             application/json:
@@ -317,7 +323,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Transaction'
         400:
-          description: Request is invalid
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /transactions/{id}:
@@ -375,6 +381,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transaction'
+        400:
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -458,20 +466,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Account'
         400:
-          description: Request is invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: object
-                    properties:
-                      invalid_field_name:
-                        type: array
-                        items:
-                          type: string
-                          example: error message
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /accounts/summary:
@@ -507,6 +502,8 @@ paths:
                         $ref: "#/components/schemas/Currency"
                       value:
                         type: number
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   /accounts/{id}:
     get:
       tags:
@@ -562,6 +559,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        400:
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -608,7 +607,7 @@ paths:
         - Areas
       summary: Returns list of areas
       responses:
-        '200':
+        200:
           description: List of areas
           content:
             application/json:
@@ -616,6 +615,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Area'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
         - Areas
@@ -624,39 +625,16 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                account:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    amount:
-                      type: integer
-                    currency_id:
-                      type: integer
+              $ref: '#/components/schemas/Area'
       responses:
         201:
-          description: Account is created
+          description: Area is created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Area'
         400:
-          description: Request is invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: object
-                    properties:
-                      invalid_field_name:
-                        type: array
-                        items:
-                          type: string
-                          example: error message
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /areas/{id}:
@@ -676,6 +654,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Area'
+        400:
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -714,6 +694,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Area'
+        400:
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -770,6 +752,36 @@ paths:
                   $ref: "#/components/schemas/Currency"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Currencies
+      summary: Adds currency to user's selection
+      parameters:
+        - in: query
+          name: currency_id
+      responses:
+        200:
+          description: Updated currency list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Currency"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Currency does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Currency does not exist
   /currencies/{id}:
     get:
       tags:
@@ -800,6 +812,34 @@ paths:
                           $ref: "#/components/schemas/CurrencyRate"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - Currencies
+      summary: Deletes currency
+      parameters:
+        - name: id
+          in: path
+          description: ID of currency
+          required: true
+      responses:
+        204:
+          description: Currency is deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Currency does not exist or does not belong to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example:
+                        Currency does not exist or does not belong to user
+
   /categories:
     get:
       tags:
@@ -827,7 +867,6 @@ paths:
               type: object
               properties:
                 category:
-                  type: object
                   $ref: '#/components/schemas/Category'
       responses:
         201:
@@ -837,7 +876,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Category'
         400:
-          description: Request is invalid
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /categories/{id}:
@@ -895,6 +934,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+        400:
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -941,7 +982,7 @@ paths:
         - Wishes
       summary: Returns list of wishes
       responses:
-        '200':
+        200:
           description: List of wishes
           content:
             application/json:
@@ -949,7 +990,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Wish'
-        '401':
+        401:
           $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
@@ -971,20 +1012,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Wish'
         400:
-          description: Request is invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: object
-                    properties:
-                      invalid_field_name:
-                        type: array
-                        items:
-                          type: string
-                          example: error message
+          $ref: '#/components/responses/BadRequestError'
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /wishes/{id}:
@@ -1006,6 +1034,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Wish'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Wish does not exist or does not belong to the user
           content:
@@ -1018,8 +1048,6 @@ paths:
                     items:
                       type: string
                       example: Wish does not exist or does not belong to this user
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
     put:
       tags:
         - Wishes
@@ -1044,6 +1072,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Wish'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Wish does not exist or does not belong to the user
           content:
@@ -1056,8 +1088,6 @@ paths:
                     items:
                       type: string
                       example: Wish does not exist or does not belong to this user
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
     delete:
       tags:
         - Wishes
@@ -1127,6 +1157,7 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         name:
           type: string
         amount:
@@ -1145,8 +1176,11 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         name:
           type: string
+        limit:
+          type: number
       required:
         - id
         - name
@@ -1155,8 +1189,11 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         name:
           type: string
+        limit:
+          type: number
       required:
         - id
         - name
@@ -1165,6 +1202,7 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         name:
           type: string
           example: Zloty
@@ -1196,6 +1234,7 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
         description:
           type: string
           example: My wish
@@ -1225,3 +1264,18 @@ components:
   responses:
     UnauthorizedError:
       description: You are not authorized to perform this action
+    BadRequestError:
+      description: Request is invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+                properties:
+                  invalid_field_name:
+                    type: array
+                    items:
+                      type: string
+                      example: error message
