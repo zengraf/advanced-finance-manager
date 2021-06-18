@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   before_action :check_account, except: %i[index summary create]
 
   def index
-    accounts = current_user.accounts
+    accounts = current_user.accounts.order(id: :asc)
     render json: accounts
   end
 
