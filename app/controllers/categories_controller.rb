@@ -25,8 +25,8 @@ class CategoriesController < ApplicationController
       to = from.end_of_month
     end
 
-    currency_id = params[:currencyId] || current_user.currencies.first.id
-    currency = current_user.currencies.find(currency_id)
+    currency_id = params[:currencyId] || current_user.currencies.first&.id || Currency.first.id
+    currency = Currency.find(currency_id)
 
     response = {currency: currency}
     category_transactions = @category.transactions.months(from, to).includes(account: {currency: :selling_rates}, area: {}, category: {})
@@ -39,6 +39,8 @@ class CategoriesController < ApplicationController
     render json: response
   rescue Date::Error => e
     render json: { errors: ['Invalid date']}, status: :bad_request
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Currency does not exist']}, status: :not_found
   end
 
   def update

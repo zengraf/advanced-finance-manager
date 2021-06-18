@@ -641,19 +641,57 @@ paths:
     get:
       tags:
         - Areas
-      summary: Gets area
+      summary: Gets area with total and related categies with their respective totals
       parameters:
         - name: id
           in: path
           description: ID of area
           required: true
+        - name: from
+          schema:
+            type: string
+            default: beggining of current month
+          description: lower limit for transactions' dates
+          required: false
+        - name: to
+          schema:
+            type: string
+            default: end of month from date in previons parameter
+          description: upper limit for transactions' dates
+          required: false
+        - name: currencyId
+          schema:
+            type: integer
+            default: first currency selected by user, if user did not select any currency then the first global currency
+          description: id of currency that sums are converted to
+          required: false
       responses:
         200:
           description: Area object
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Area'
+                type: object
+                properties:
+                  currency:
+                    $ref: '#/components/schemas/Currency'
+                  area:
+                    type: object
+                    allOf:
+                      - $ref: '#/components/schemas/Area'
+                      - type: object
+                        properties:
+                          total:
+                            type: integer
+                          categories:
+                            type: array
+                            items:
+                              allOf:
+                              - $ref: '#/components/schemas/Category'
+                              - type: object
+                                properties:
+                                  total:
+                                    type: integer
         400:
           $ref: '#/components/responses/BadRequestError'
         401:
@@ -740,7 +778,7 @@ paths:
     get:
       tags:
         - Currencies
-      summary: Gets currencies selected by the user
+      summary: Gets all currencies
       responses:
         200:
           description: Currecies info
@@ -812,6 +850,18 @@ paths:
                           $ref: "#/components/schemas/CurrencyRate"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Currency does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Currency does not exist
     delete:
       tags:
         - Currencies
@@ -838,8 +888,7 @@ paths:
                     items:
                       type: string
                       example:
-                        Currency does not exist or does not belong to user
-
+                        Currency does not exist
   /categories:
     get:
       tags:
@@ -883,19 +932,57 @@ paths:
     get:
       tags:
         - Categories
-      summary: Gets category
+      summary: Gets category with total and relared areas with respective totals
       parameters:
         - name: id
           in: path
           description: ID of category
           required: true
+        - name: from
+          schema:
+            type: string
+            default: beggining of current month
+          description: lower limit for transactions' dates
+          required: false
+        - name: to
+          schema:
+            type: string
+            default: end of month from date in previons parameter
+          description: upper limit for transactions' dates
+          required: false
+        - name: currencyId
+          schema:
+            type: integer
+            default: first currency selected by user, if user did not select any currency then the first global currency
+          description: id of currency that sums are converted to
+          required: false
       responses:
         200:
-          description: Category object
+          description: Category summary
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/Category'
+                type: object
+                properties:
+                  currency:
+                    $ref: '#/components/schemas/Currency'
+                  category:
+                    type: object
+                    allOf:
+                      - $ref: '#/components/schemas/Category'
+                      - type: object
+                        properties:
+                          total:
+                            type: integer
+                          areas:
+                            type: array
+                            items:
+                              allOf:
+                                - $ref: '#/components/schemas/Area'
+                                - type: object
+                                  properties:
+                                    total:
+                                      type: integer
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -1114,6 +1201,75 @@ paths:
                     items:
                       type: string
                       example: Wish does not exist or does not belong to this user
+  /analytics:
+    get:
+      tags:
+        - Analytics
+      summary: Gets sums for each area and category of the user
+      parameters:
+        - name: from
+          schema:
+            type: string
+            default: beggining of current month
+          description: lower limit for transactions' dates
+          required: false
+        - name: to
+          schema:
+            type: string
+            default: end of month from date in previons parameter
+          description: upper limit for transactions' dates
+          required: false
+        - name: currencyId
+          schema:
+            type: integer
+            default: first currency selected by user, if user did not select any currency then the first global currency
+          description: id of currency that sums are converted to
+          required: false
+      responses:
+        200:
+          description: Analytics by areas and categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currency:
+                    type: object
+                    $ref: '#/components/schemas/Currency'
+                  areas:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Area'
+                        - type: object
+                          properties:
+                            total:
+                              type: integer
+                  categories:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Category'
+                        - type: object
+                          properties:
+                            total:
+                              type: integer
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        400:
+          $ref: '#/components/responses/InvalidDateError'
+        404:
+          description: Currency does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Currency does not exist
 components:
   securitySchemes:
     bearerAuth:
@@ -1262,6 +1418,18 @@ components:
         avatar_url:
           type: string
   responses:
+    InvalideDateError:
+      description: Date is invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+                  example: Invalid date
     UnauthorizedError:
       description: You are not authorized to perform this action
     BadRequestError:

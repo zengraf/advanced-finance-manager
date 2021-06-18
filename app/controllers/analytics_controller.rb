@@ -12,25 +12,25 @@ class AnalyticsController < ApplicationController
       to = from.end_of_month
     end
 
-    currency_id = params[:currencyId] || current_user.currencies.first.id
-    currency = current_user.currencies.find(currency_id)
+    currency_id = params[:currencyId] || current_user.currencies.first&.id || Currency.first.id
+    currency = Currency.find(currency_id)
 
     response = {currency: currency}
     transactions = current_user.transactions.months(from, to).includes(account: {currency: :selling_rates}, area: {}, category: {})
 
     response[:areas] = transactions.group_by(&:area).map do |area, transactions|
-      area.as_json.merge({amount: sum_with_conversion(transactions, currency)})
+      area.as_json.merge({total: sum_with_conversion(transactions, currency)})
     end
 
     response[:categories] = transactions.group_by(&:category).map do |category, transactions|
-      category.as_json.merge({amount: sum_with_conversion(transactions, currency)})
+      category.as_json.merge({total: sum_with_conversion(transactions, currency)})
     end
 
     render json: response
   rescue Date::Error
     render json: { errors: ['Invalid date']}, status: :bad_request
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: ['Currency does not exist or does not belong to this user']}, status: :not_found
+    render json: { errors: ['Currency does not exist']}, status: :not_found
   end
 
   private
