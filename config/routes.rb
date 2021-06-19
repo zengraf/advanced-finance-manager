@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :wishes
   namespace :third_party do
     get '/monobank' => 'monobank#index'
+    post '/monobank' => 'monobank#index'
   end
   devise_for :users, controllers: {passwords: 'passwords'}, defaults: {format: :json}
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
