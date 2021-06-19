@@ -1,6 +1,4 @@
 class MonobankApi
-  include Rails.application.routes.url_helpers
-
   ENDPOINT = 'https://api.monobank.ua'
 
   class << self
@@ -15,7 +13,7 @@ class MonobankApi
     end
 
     def webhook(user)
-      client(user).post("#{ENDPOINT}/personal/webhook", json: {webHookUrl: third_party_monobank_url})
+      client(user).post("#{ENDPOINT}/personal/webhook", json: {webHookUrl: Rails.application.routes.url_helpers.third_party_monobank_url})
     end
 
     private
