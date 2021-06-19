@@ -14,7 +14,7 @@ class MonobankApi
                   .parse
     end
 
-    def webhook
+    def webhook(user)
       client(user).post("#{ENDPOINT}/personal/webhook", json: {webHookUrl: third_party_monobank_url})
     end
 

@@ -12,12 +12,12 @@ CurrencyRate.create!([
                       { from: zloty, to: euro, rate: 0.2186, source: 'Revolut' },
                       { from: dollar, to: zloty, rate: 3.6842, source: 'Revolut' },
                       { from: euro, to: zloty, rate: 4.4682, source: 'Revolut' },
-                      { from: hryvnia, to: dollar, rate: 0.0354, source: 'monobank'},
-                      { from: hryvnia, to: euro, rate: 0.0292, source: 'monobank'},
-                      { from: hryvnia, to: zloty, rate: 0.1317, source: 'monobank'},
-                      { from: dollar, to: hryvnia, rate: 28.0, source: 'monobank'},
-                      { from: euro, to: hryvnia, rate: 33.8, source: 'monobank'},
-                      { from: zloty, to: hryvnia, rate: 7.41, source: 'monobank'}
+                      { from: hryvnia, to: dollar, rate: 0.0354, source: 'monobank' },
+                      { from: hryvnia, to: euro, rate: 0.0292, source: 'monobank' },
+                      { from: hryvnia, to: zloty, rate: 0.1317, source: 'monobank' },
+                      { from: dollar, to: hryvnia, rate: 28.0, source: 'monobank' },
+                      { from: euro, to: hryvnia, rate: 33.8, source: 'monobank' },
+                      { from: zloty, to: hryvnia, rate: 7.41, source: 'monobank' }
                     ])
 
 user = User.create!(username: 'user', email: 'user@example.com', password: 'password', password_confirmation: 'password', confirmed_at: Time.current)

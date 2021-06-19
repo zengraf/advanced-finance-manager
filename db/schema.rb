@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_18_223225) do
+ActiveRecord::Schema.define(version: 2021_06_19_113922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2021_06_18_223225) do
     t.bigint "currency_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "monobank_id"
     t.index ["currency_id"], name: "index_accounts_on_currency_id"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
@@ -123,6 +124,7 @@ ActiveRecord::Schema.define(version: 2021_06_18_223225) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
+    t.string "monobank_id"
     t.index ["account_id"], name: "index_transactions_on_account_id"
     t.index ["area_id"], name: "index_transactions_on_area_id"
     t.index ["category_id"], name: "index_transactions_on_category_id"
@@ -143,6 +145,7 @@ ActiveRecord::Schema.define(version: 2021_06_18_223225) do
     t.string "unconfirmed_email"
     t.string "jti", null: false
     t.bigint "primary_currency_id", null: false
+    t.string "monobank_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
