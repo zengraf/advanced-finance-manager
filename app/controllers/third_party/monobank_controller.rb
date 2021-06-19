@@ -1,7 +1,7 @@
 module ThirdParty
-  class MonobankController < ApplicationController
+  class MonobankController < ActionController::API
     def index
-      render json: {}, status: :ok and return if account.nil? or Transaction.find_by_monobank_id(params[:data][:statementItem][:id]).present?
+      render json: {}, status: :ok and return if params[:data].nil? or account.nil? or Transaction.find_by_monobank_id(params[:data][:statementItem][:id]).present?
 
       description = params[:data][:statementItem][:description]
       description += ": #{params[:data][:statementItem][:comment]}" unless params[:data][:statementItem][:comment].empty?
